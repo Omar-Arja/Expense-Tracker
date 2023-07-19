@@ -13,6 +13,12 @@ $(document).ready(function () {
 
   })
 
+  $(document).on("click", ".delete-btn", function () {
+    const row = $(this).closest("tr"); // Get the row element
+    deleteExpense(row);
+  });
+
+
 })
 
 const name = $("#expenseName")
@@ -29,9 +35,25 @@ function addExpense() {
   expense_list.append(`<tr>
     <td>${expense_name}</td>
     <td>${expense_amount}</td>
-    <td><button id="delete-btn">Delete</button></td>
+    <td><button class="delete-btn">Delete</button></td>
   </tr>`)
   $("#totalAmmount").text(total)
   $("#expenseName").val("");
   $("#expenseAmount").val("");
+}
+
+function deleteExpense(row) {
+  const index = row.index();
+  const amountToRemove = parseFloat(expenses[index].amount);
+  expenses.splice(index, 1);
+  total -= amountToRemove;
+
+  $("#totalAmmount").text(total);
+  row.remove();
+
+  if (expenses.length === 0) {
+    expense_list.append(`<tr>
+      <td colspan="3" id="empty-table">No expense added yet!</td>
+    </tr>`);
+  }
 }
